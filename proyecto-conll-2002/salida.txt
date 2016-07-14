@@ -1,0 +1,3 @@
+La DA 1 B-LOC B-LOC
+Coruña NC 1 I-LOC I-LOC
+, Fc 0 O O
