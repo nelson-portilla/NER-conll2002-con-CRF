@@ -1,0 +1,2 @@
+# NER-conll2002-con-CRF
+El corpus Conll-2002 es un corpus en Espanol que tiene anotado las etiquetas PER, LOC, ORG y MISC bajo el est ́andar IOB y ademas considera como modelo base la cadena y el POS tagging como observaciones iniciales. Se quiere usar etiquetado secuencial para anotar un conjunto de datos de testeo. Se entrena un modelo basado en CRFs sobre Conll-2002. El proyecto consiste en calcular la precision y recall de cada una las etiquetas combinadas con las etiquetas IOB; {I,B} × {PER, LOC, ORG, MISC} usando el algoritmo Conlleval definido en el Conll-2002.
