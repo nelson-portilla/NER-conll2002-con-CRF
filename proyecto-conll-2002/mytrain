@@ -1,16 +1,5 @@
-Melbourne NP B-LOC
-( Fpa O
-Australia NP B-LOC
-) Fpt O
-, Fc O
-25 Z O
-may NC O
-( Fpa O
-EFE NC B-ORG
-) Fpt O
-. Fp O
-
-- Fg O
-
-El DA O
-
+Melbourne NP 1 B-LOC
+( Fpa 0 O
+General AQ 1 I-PER
+proteger VMN 0 O
+may NC 0 O
