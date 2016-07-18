@@ -43,8 +43,9 @@ def addFeatures(pathin, pathout):
 	salidam3=open("modelo3/"+pathout, 'a')
 	salidam4=open("modelo4/"+pathout, 'a')
 	salidam5=open("modelo5/"+pathout, 'a')
-
+	cont=1
 	for linea in filas:
+		print cont
 		if (linea[0]!='\n'):
 			# print "\n\n------NUEVA LINEA-------\n\n"			
 			lista=linea.split()
@@ -122,7 +123,7 @@ def addFeatures(pathin, pathout):
 				# print "Escribiendo modelo 5..."
 				salidam5.write(str(palabra+" "))
 			salidam5.write("\n")
-
+		cont+=1
 			# print "lista NUEVA: ", lista
 
 
@@ -141,18 +142,18 @@ if __name__ == '__main__':
 	#***Se envia un archivo train a modificar y un nombre para la salida
 	#***OJO: el train que se envia ya debe tener el modelo 1
 	#***Es decir ya debe tener 4 columnas.
-	addFeatures("train-Modelo1","train")
+	# addFeatures("train-Modelo1","train")
 	print "TRAIN Exito, Creando Test..."
-	addFeatures("test-Modelo1","test")
+	# addFeatures("test-Modelo1","test")
 	print "Caracteristicas Agregadas con exito...\nIniciando creacion de modelos"
 
 
 
-	for x in range(2,6):
+	for x in range(5,6):
 		print "Calculando Modelo, Transformando salida y calculando PR del modelo ",x
 		# makemodel.makemodel(template, train, nombre_modelo, test, nombre_test)
-		makemodel.makemodel("modelo"+x+"/template", "modelo"+x+"/train", "modelo"+x+"/modelo", "modelo"+x+"/test", "modelo"+x+"/salida")
-		quitartab.quitartab("modelo"+x+"/salida", "modelo"+x+"/nueva_salida")
-		calculoPR.calculo_PR("modelo"+x+"/nueva_salida", "modelo"+x+"/tabla-PR")
+		makemodel.makemodel("modelo"+str(x)+"/template", "modelo"+str(x)+"/train", "modelo"+str(x)+"/modelo", "modelo"+str(x)+"/test", "modelo"+str(x)+"/salida")
+		quitartab.quitartab("modelo"+str(x)+"/salida", "modelo"+str(x)+"/nueva_salida")
+		calculoPR.calculo_PR("modelo"+str(x)+"/nueva_salida", "modelo"+str(x)+"/tabla-PR")
 	print "Archivos creados exitosamente..."
 	

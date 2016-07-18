@@ -1,7 +1,0 @@
-../CRF++-0.58/crf_learn modelo1/template modelo1/train modelo1/modelo
-
-
-../CRF++-0.58/crf_test -m modelo1/modelo modelo1/test >> modelo1/salida.txt
-
-
-
