@@ -2,6 +2,8 @@
 import sys, os
 reload(sys)
 sys.setdefaultencoding('utf8')
+import codecs
+import quitartab, calculoPR, makemodel
 
 dic= {
 	'A': [1, 3, 4],
@@ -26,7 +28,7 @@ def listaDeSoloEagles(listaAM):
 			listaeagles.append(listaAM[2])
 			#Obtenemos toda las etiquetas eagles de la palabra con el ciclo 
 			y=2
-			print "Tiene:", n
+			# print "Tiene:", n
 			for i in range(2,n+1):				
 				listaeagles.append(listaAM[y+3])
 				y+=3	
@@ -35,89 +37,93 @@ def listaDeSoloEagles(listaAM):
 
 def addFeatures(pathin, pathout):
 	diccionario={'A':[1,3,4,0], 'R':[1,0,0,0]}
-	filas=open(pathin, 'r')
+	filas=codecs.open(pathin, 'r', "ISO-8859-1")
 	binario={'True':"1", 'False':"0"}
-	salidam2=open("modelo2/"+pathout, 'w')
-	salidam3=open("modelo3/"+pathout, 'w')
-	salidam4=open("modelo4/"+pathout, 'w')
-	salidam5=open("modelo5/"+pathout, 'w')
+	salidam2=open("modelo2/"+pathout, 'a')
+	salidam3=open("modelo3/"+pathout, 'a')
+	salidam4=open("modelo4/"+pathout, 'a')
+	salidam5=open("modelo5/"+pathout, 'a')
 
 	for linea in filas:
 		if (linea[0]!='\n'):
-			print "\n\n------NUEVA LINEA-------\n\n"			
+			# print "\n\n------NUEVA LINEA-------\n\n"			
 			lista=linea.split()
-			print "Palabra para analize: ", str(lista[0])
+			# print "***\npalabra para analize: ", str(lista[0])
 			post = lista[1]
-			print "Cateoria: ", post
-			listaAM=str(os.popen("echo '"+str(lista[0])+"' | analyze -f am.cfg").read()).split()
+			# print "Cateoria: ", post
+			word=str(lista[0])
+			if(word=='"'):
+				word="'"
+			listaAM=str(os.popen("echo "+'"'+word+'"'+" | analyze -f am.cfg").read()).split()			
 			# print "LISTA analye: ",listaAM
 			listaeagles=listaDeSoloEagles(listaAM)
 			# print "Lista de eagles: ",listaeagles
-			print "eagles: ",listaeagles
+			# print "eagles: ",listaeagles
 			#--Obtiene la lista del diccionario, le entrego la primera letra del postag
 			ls= dic[post[0]]
 			#Se arma una lista de las primeras letras de la listaEagles y se consulta posicion donde coincida categoria	
 			try:
 				index = [i[0] for i in listaeagles].index(post[0])
-				print "Posicion Index ",index
+				# print "Posicion Index ",index
 				eagles_sing = listaeagles[index]
-				print "Eagles coincidente ",eagles_sing
+				# print "Eagles coincidente ",eagles_sing
 			except Exception, e:
-				print "NO coincide la CATEGORIA"					
+				# print "NO coincide la CATEGORIA"
+				eagles_sing = listaeagles[0]				
 			
 			try:
 				tipo= eagles_sing[ls[0]]
-				print tipo
+				# print tipo
 			except IndexError:
 				tipo = "0"
-				print "no tipo"
+				# print "no tipo"
 			try:
 				genero= eagles_sing[ls[1]]
-				print genero
+				# print genero
 			except IndexError:
 				genero="0"
-				print "no genero"
+				# print "no genero"
 			try:
 				numero= eagles_sing[ls[2]]
-				print numero
+				# print numero
 			except IndexError:
 				numero="0"
-				print "no numero"
+				# print "no numero"
 			try:
 				persona= eagles_sing[ls[3]]
-				print persona
+				# print persona
 			except IndexError:
 				persona="0"
-				print "no persona"
+				# print "no persona"
 			
-			print "Lista Inicial: ", lista
+			# print "Lista Inicial: ", lista
 
 			lista.insert(3, tipo)
 			for palabra in lista:
-				print "Escribiendo modelo 2..."
+				# print "Escribiendo modelo 2..."
 				salidam2.write(str(palabra+" "))
 			salidam2.write("\n")
 			
 			lista.insert(4, genero)
 			for palabra in lista:
-				print "Escribiendo modelo 3..."
+				# print "Escribiendo modelo 3..."
 				salidam3.write(str(palabra+" "))
 			salidam3.write("\n")
 			
 			
 			lista.insert(5, numero)
 			for palabra in lista:
-				print "Escribiendo modelo 4..."
+				# print "Escribiendo modelo 4..."
 				salidam4.write(str(palabra+" "))
 			salidam4.write("\n")
 
 			lista.insert(6, persona)
 			for palabra in lista:
-				print "Escribiendo modelo 5..."
+				# print "Escribiendo modelo 5..."
 				salidam5.write(str(palabra+" "))
 			salidam5.write("\n")
 
-			print "lista NUEVA: ", lista
+			# print "lista NUEVA: ", lista
 
 
 
@@ -127,16 +133,26 @@ def addFeatures(pathin, pathout):
 	salidam5.close()
 	filas.close()
 
-#Segunda Caracteristica: Agrega el tipo
-#addSecondCaracter()
+
 
 
 if __name__ == '__main__':
-	print "Iniciando..."
-	#Se envia un archivo train a modificar y un nombre para la salida
-	#OJO: el train que se envia ya debe tener el modelo 1
-	#Es decir ya debe tener 4 columnas.
-	addFeatures("mytrain","train")
+	print "Iniciando creacion de archivos..."
+	#***Se envia un archivo train a modificar y un nombre para la salida
+	#***OJO: el train que se envia ya debe tener el modelo 1
+	#***Es decir ya debe tener 4 columnas.
+	addFeatures("train-Modelo1","train")
+	print "TRAIN Exito, Creando Test..."
+	addFeatures("test-Modelo1","test")
+	print "Caracteristicas Agregadas con exito...\nIniciando creacion de modelos"
+
+
+
+	for x in range(2,6):
+		print "Calculando Modelo, Transformando salida y calculando PR del modelo ",x
+		# makemodel.makemodel(template, train, nombre_modelo, test, nombre_test)
+		makemodel.makemodel("modelo"+x+"/template", "modelo"+x+"/train", "modelo"+x+"/modelo", "modelo"+x+"/test", "modelo"+x+"/salida")
+		quitartab.quitartab("modelo"+x+"/salida", "modelo"+x+"/nueva_salida")
+		calculoPR.calculo_PR("modelo"+x+"/nueva_salida", "modelo"+x+"/tabla-PR")
 	print "Archivos creados exitosamente..."
-	# addFirstCaracter("mytrain","modelo1/train")
-	# addFirstFeature("esp.testb","test")
+	
